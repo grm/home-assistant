@@ -129,14 +129,14 @@ class GardenaSmartWaterControl(SwitchDevice):
 
     def turn_on(self, **kwargs):
         """Start watering."""
-        duration = 3600
+        duration = 3540 # gardena api doesn't support values higher than 59 minutes although 60 is advertised
         if self._config[CONF_SMART_WATERING]:
-            duration = str(int(self._config[CONF_SMART_WATERING]) * 60)
-        self._device.start_seconds_to_override(duration)
+            duration = int(self._config[CONF_SMART_WATERING]) * 60
+        self._sic.start_seconds_to_override(duration)
 
     def turn_off(self, **kwargs):
         """Stop watering."""
-        self._device.stop_until_next_task()
+        self._sic.stop_until_next_task()
 
 
 class GardenaPowerSocket(SwitchDevice):
@@ -218,11 +218,11 @@ class GardenaPowerSocket(SwitchDevice):
 
     def turn_on(self, **kwargs):
         """Start watering."""
-        self._device.start_override()
+        self._sic.start_override()
 
     def turn_off(self, **kwargs):
         """Stop watering."""
-        self._device.stop_until_next_task()
+        self._sic.stop_until_next_task()
 
 
 class GardenaSmartIrrigationControl(SwitchDevice):
@@ -305,11 +305,11 @@ class GardenaSmartIrrigationControl(SwitchDevice):
 
     def turn_on(self, **kwargs):
         """Start watering."""
-        duration = 3600
+        duration = 3540 # gardena api doesn't support values higher than 59 minutes although 60 is advertised
         if self._config[CONF_SMART_IRRIGATION_DURATION]:
-            duration = str(int(self._config[CONF_SMART_IRRIGATION_DURATION]) * 60)
-        self._device.start_seconds_to_override(duration, self._device["id"])
+            duration = int(self._config[CONF_SMART_IRRIGATION_DURATION]) * 60)
+        self._sic.start_seconds_to_override(duration, self._device["id"])
 
     def turn_off(self, **kwargs):
         """Stop watering."""
-        self._device.stop_until_next_task(self._device["id"])
+        self._sic.stop_until_next_task(self._device["id"])
